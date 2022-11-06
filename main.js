@@ -44,13 +44,13 @@ function damageMagnification() {
 }
 
 function resistance() {
-    let rst = (v('#mtr-rst') - v('#ply-drst')) / 100;
+    let rst = v('#mtr-rst') - v('#ply-drst');
     if (rst < 0) {
-        rst = 1 - rst / 2;
+        rst = 1 - rst / 200;
     } else if (0 <= rst && rst <= 75) {
-        rst = 1 - rst;
+        rst = 1 - rst / 100;
     } else if (rst > 75) {
-        rst = 1 / (1 + 4 * rst);
+        rst = 1 / (1 + 4 * rst / 100);
     }
     return rst;
 }
