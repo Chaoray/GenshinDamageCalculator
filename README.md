@@ -1,4 +1,4 @@
-# GenshinDamageCaculator
+# GenshinDamageCaclculator
 
 就公式帶一帶  
 數值應該是準的  
