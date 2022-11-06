@@ -30,13 +30,19 @@
                     <span>元素傷害加成%</span><input type="number" id="ply-eleDmgInc" value="50" />
                 </div>
                 <div class="horizontal">
-                    <span>反應傷害加成%</span><input type="number" placeholder="沒有打0" id="ply-rctDmgInc" value="0" />
+                    <span>反應傷害加成%</span><input type="number" placeholder="例:魔女套" id="ply-rctDmgInc" value="0" />
                 </div>
                 <div class="horizontal">
                     <span>元素精通</span><input type="number" id="ply-eleMtr" value="100" />
                 </div>
                 <div class="horizontal">
                     <span>技能倍率%</span><input type="number" id="ply-skl" value="130" />
+                </div>
+                <div class="horizontal">
+                    <span>對怪減抗%</span><input type="number" id="ply-drst" value="0" />
+                </div>
+                <div class="horizontal">
+                    <span>對怪減防%</span><input type="number" id="ply-ddef" value="0" />
                 </div>
             </div>
             <h2>怪物</h2>
@@ -49,43 +55,46 @@
                     <a href="https://wiki.biligame.com/ys/%E6%80%AA%E7%89%A9%E6%8A%97%E6%80%A7%E4%B8%80%E8%A7%88">抗性%</a><input type="number" id="mtr-rst" value="10"/>
                 </div>
             </div>
+
             <h2>反應</h2>
             <div class="vertical">
                 <div class="horizontal">
                     <span>類型</span>
                     <select id="reaction">
+                        <option value="1" class="physical">無(物傷)</option>
+
                         <option value="2" class="amplifying">蒸發 2倍</option>
                         <option value="2" class="amplifying">融化 2倍</option>
                         <option value="1.5" class="amplifying">蒸發 1.5倍</option>
                         <option value="1.5" class="amplifying">融化 1.5倍</option>
-                        <option value="2.4" class="transformative">感電</option>
-                        <option value="4" class="transformative">超載</option>
+
+                        <option value="0.5" class="transformative">燃燒</option>
                         <option value="1" class="transformative">超導</option>
                         <option value="1.2" class="transformative">擴散</option>
-                        <!-- <option value="burning" class="transformative">燃燒</option> -->
+                        <option value="2.4" class="transformative">感電</option>
+                        <option value="3" class="transformative">碎冰</option>
+                        <option value="4" class="transformative">超載</option>
+
                         <option value="2" class="bloom">原綻放</option>
                         <option value="3" class="bloom">烈綻放</option>
                         <option value="3" class="bloom">超綻放</option>
+
                         <option value="1.25" class="quicken">蔓激化</option>
                         <option value="1.15" class="quicken">超激化</option>
+
+                        <option value="4.44" class="crystallize">結晶</option>
                     </select>
                 </div>
             </div>
             <button id="clear">清空</button>
         </div>
         <div class="vertical">
-            <h2>結果</h2>
+            <h2>結果(均計算抗性及防禦)</h2>
             <div class="horizontal">
                 <p>基傷</p><span id="dmg"></span>
             </div>
             <div class="horizontal">
-                <p>基傷+抗性</p><span id="dmg-rst"></span>
-            </div>
-            <div class="horizontal">
                 <p>基傷+暴擊</p><span id="dmg-crt"></span>
-            </div>
-            <div class="horizontal">
-                <p>基傷+暴擊+抗性</p><span id="dmg-crt-rst"></span>
             </div>
             <div class="horizontal">
                 <p>基傷期望傷害</p><span id="dmg-exp"></span>
@@ -95,16 +104,14 @@
                 <p>反應</p><span id="dmg-rct"></span>
             </div>
             <div class="horizontal">
-                <p>反應+抗性</p><span id="dmg-rct-rst"></span>
-            </div>
-            <div class="horizontal">
                 <p>反應+暴擊</p><span id="dmg-rct-crt"></span>
             </div>
             <div class="horizontal">
-                <p>反應+暴擊+抗性</p><span id="dmg-rct-crt-rst"></span>
-            </div>
-            <div class="horizontal">
                 <p>反應期望傷害</p><span id="dmg-rct-exp"></span>
+            </div>
+            <br>
+            <div class="horizontal">
+                <p>結晶盾值</p><span id="cst"></span>
             </div>
         </div>
     </div>

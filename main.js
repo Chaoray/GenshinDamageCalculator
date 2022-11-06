@@ -19,11 +19,6 @@ $('#clear').addEventListener('click', () => {
     });
 });
 
-function calculate() {
-    directDamageCalc();
-    reactionDamageCalc();
-}
-
 function level() {
     if (v('#ply-lvl') >= 70 && v('#mtr-lvl') <= 10) {
         return 1.35;
@@ -37,7 +32,7 @@ function skill() {
 }
 
 function crit() {
-    return v('#ply-crtDmg') / 100;
+    return 1 + v('#ply-crtDmg') / 100;
 }
 
 function critExp() {
@@ -48,21 +43,35 @@ function damageMagnification() {
     return 1 + v('#ply-eleDmgInc') / 100;
 }
 
+function resistance() {
+    let rst = (v('#mtr-rst') - v('#ply-drst')) / 100;
+    if (rst < 0) {
+        rst = 1 - rst / 2;
+    } else if (0 <= rst && rst <= 75) {
+        rst = 1 - rst;
+    } else if (rst > 75) {
+        rst = 1 / (1 + 4 * rst);
+    }
+    return rst;
+}
+
+function defense() {
+    let monsterDef = v('#mtr-lvl') * 5 + 500;
+    let playerCoef = v('#ply-lvl') * 5 + 500;
+
+    return playerCoef / (playerCoef + monsterDef * (1 - v('#ply-ddef') / 100));
+}
+
 let directDamage = 0;
 let directDamageRst = 0;
 let directDamageCrt = 0;
 let directDamageCrtRst = 0;
 function directDamageCalc() {
-    directDamage = v('#ply-atk') * skill() * level();
-    directDamageRst = directDamage * resistance();
-    directDamageCrt = directDamage * crit();
-    directDamageCrtRst = directDamageCrt * resistance();
+    directDamage = v('#ply-atk') * skill() * level() * resistance() * defense();
 
     $('#dmg').innerHTML = directDamage;
-    $('#dmg-rst').innerHTML = directDamageRst;
-    $('#dmg-crt').innerHTML = directDamageCrt;
-    $('#dmg-crt-rst').innerHTML = directDamageCrtRst;
-    $('#dmg-exp').innerHTML = directDamageRst * critExp();
+    $('#dmg-crt').innerHTML = directDamage * crit();
+    $('#dmg-exp').innerHTML = directDamage * crit() * critExp();
 }
 
 let reactionDamage = 0;
@@ -74,68 +83,67 @@ function reactionDamageCalc() {
     let reactionSelect = $('#reaction');
     let reactionValue = parseFloat(v('#reaction'));
     let lvl = v('#ply-lvl');
-    let rctDmgInc = v('#ply-rctDmgInc');
+    let rctDmgInc = v('#ply-rctDmgInc') / 100;
     let eleMtr = v('#ply-eleMtr');
 
+    $('#cst').innerHTML = NaN;
     switch (reactionSelect.options[reactionSelect.selectedIndex].className) {
+        case 'physical': {
+            reactionDamage = directDamage * damageMagnification();
+            reactionDamageCrt = reactionDamage * crit();
+            reactionExpectedDamage = reactionDamage * critExp();
+            break;
+        }
+
         case 'amplifying': {
+            // 伤害=总攻击力*伤害倍率*(1+伤害加成)*(1+暴击伤害)*反应总倍率*防御减免*抗性减免
             let A = 2.78;
             let B = 1400;
             reactionDamage = directDamage * damageMagnification() * reactionValue * (1 + A / (1 + B / v('#ply-eleMtr')) + v('#ply-rctDmgInc'));
-            reactionDamageRst = reactionDamage * resistance();
             reactionDamageCrt = reactionDamage * crit();
-            reactionDamageCrtRst = reactionDamageCrt * resistance();
-            reactionExpectedDamage = reactionDamageRst * critExp();
-            break;
-        }
-
-        case 'transformative': {
-            let C = 32000 / (eleMtr + 2000);
-            reactionDamage = transformativeCoefficient[lvl - 1] * reactionValue * (17 - C) + rctDmgInc;
-            reactionDamageRst = reactionDamage * resistance();
-            reactionDamageCrt = NaN;
-            reactionDamageCrtRst = NaN;
-            reactionExpectedDamage = NaN;
-            break;
-        }
-
-
-        case 'bloom': {
-            reactionDamage = dendroCoefficient[lvl - 1] * reactionValue * (1 + (16 * eleMtr) / (eleMtr + 2000) + rctDmgInc);
-            reactionDamageRst = reactionDamage * resistance();
-            reactionDamageCrt = NaN;
-            reactionDamageCrtRst = NaN;
-            reactionExpectedDamage = NaN;
+            reactionExpectedDamage = reactionDamage * critExp();
             break;
         }
 
         case 'quicken': {
-            reactionDamage = directDamage + dendroCoefficient[lvl - 1] * reactionValue * (1 + (5 * eleMtr) / (eleMtr + 1200) + rctDmgInc);
-            reactionDamageRst = reactionDamage * resistance();
+            // 伤害=(总攻击力*伤害倍率+激化反应加成值)*(1+伤害加成)*(1+暴击伤害)*防御减免*抗性减免
+            reactionDamage =
+                v('#ply-atk') * skill() +
+                transformativeCoefficient[lvl - 1] * reactionValue * (1 + (5 * eleMtr) / (eleMtr + 1200) + rctDmgInc);
+            reactionDamage = reactionDamage * damageMagnification() * resistance() * defense();
             reactionDamageCrt = reactionDamage * crit();
-            reactionDamageCrtRst = reactionDamageRst * crit();
-            reactionExpectedDamage = reactionDamageRst * critExp();
+            reactionExpectedDamage = reactionDamage * critExp();
+            break;
+        }
+
+        case 'transformative':
+        case 'bloom': {
+            // 剧变伤害=等级系数×抗性承伤×反应基础倍率×(1+精通提升+反应伤害提升)
+            reactionDamage =
+                transformativeCoefficient[lvl - 1] * reactionValue * (1 + (16 * eleMtr / (eleMtr + 2000)) + rctDmgInc)
+                * resistance()
+                * defense();
+            reactionDamageCrt = NaN;
+            reactionExpectedDamage = NaN;
+            break;
+        }
+
+        case 'crystallize': {
+            // 结晶等级系数*(1+(4.44*元素精通)/(元素精通+1400))
+            let shield = crystalShieldCoefficient[lvl - 1] * (1 + (4.44 * eleMtr / (eleMtr + 1400)));
+            $('#cst').innerHTML = shield;
             break;
         }
     }
 
-    $('#dmg-rct').innerHTML = reactionDamage * level();
-    $('#dmg-rct-rst').innerHTML = reactionDamageRst * level();
-    $('#dmg-rct-crt').innerHTML = reactionDamageCrt * level();
-    $('#dmg-rct-crt-rst').innerHTML = reactionDamageCrtRst * level();
-    $('#dmg-rct-exp').innerHTML = reactionExpectedDamage * level();
+    $('#dmg-rct').innerHTML = reactionDamage;
+    $('#dmg-rct-crt').innerHTML = reactionDamageCrt;
+    $('#dmg-rct-exp').innerHTML = reactionExpectedDamage;
 }
 
-function resistance() {
-    let rst = v('#mtr-rst');
-    if (rst <= 0) {
-        rst = 1 - (rst / 100) / 2;
-    } else if (rst > 0 && rst <= 75) {
-        rst = 1 - rst / 100;
-    } else if (rst > 75) {
-        rst = 1 / (1 + 4 * rst / 100);
-    }
-    return rst;
+function calculate() {
+    directDamageCalc();
+    reactionDamageCalc();
 }
 
 calculate();
