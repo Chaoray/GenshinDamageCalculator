@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Genshin Damage Caculator</title>
+    <title>Genshin Damage Calculator</title>
 </head>
 
 <body>
@@ -43,6 +43,9 @@
                 </div>
                 <div class="horizontal">
                     <span>對怪減防%</span><input type="number" id="ply-ddef" value="0" />
+                </div>
+                <div class="horizontal">
+                    <span>無視防禦%</span><input type="number" id="ply-igdef" value="0" />
                 </div>
             </div>
             <h2>怪物</h2>
@@ -90,6 +93,17 @@
         </div>
         <div class="vertical">
             <h2>結果(均計算抗性及防禦)</h2>
+            <div class="horizontal">
+                <p>等級壓制倍率</p><span id="level"></span>
+            </div>
+            <div class="horizontal">
+                <p>抗性減傷</p><span id="resist"></span>
+            </div>
+            <div class="horizontal">
+                <p>防禦減傷</p><span id="def"></span>
+            </div>
+            <p>註：劇變反應無視防禦</p>
+            <br>
             <div class="horizontal">
                 <p>基傷</p><span id="dmg"></span>
             </div>

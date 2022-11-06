@@ -56,10 +56,12 @@ function resistance() {
 }
 
 function defense() {
-    let monsterDef = v('#mtr-lvl') * 5 + 500;
-    let playerCoef = v('#ply-lvl') * 5 + 500;
+    // (角色等级+100) / ((1-无视防御效果)(1-防御减免效果+防御增加效果) * (怪物等级+100)+角色等级+100)
+    let monsterCoef = v('#mtr-lvl') + 100;
+    let playerCoef = v('#ply-lvl') + 100;
+    let ignoreDef = v('#ply-igdef') / 100;
 
-    return playerCoef / (playerCoef + monsterDef * (1 - v('#ply-ddef') / 100));
+    return playerCoef / ((1 - ignoreDef) * (1 - v('#ply-ddef')) * monsterCoef + playerCoef)
 }
 
 let directDamage = 0;
@@ -121,8 +123,7 @@ function reactionDamageCalc() {
             // 剧变伤害=等级系数×抗性承伤×反应基础倍率×(1+精通提升+反应伤害提升)
             reactionDamage =
                 transformativeCoefficient[lvl - 1] * reactionValue * (1 + (16 * eleMtr / (eleMtr + 2000)) + rctDmgInc)
-                * resistance()
-                * defense();
+                * resistance();
             reactionDamageCrt = NaN;
             reactionExpectedDamage = NaN;
             break;
@@ -144,6 +145,9 @@ function reactionDamageCalc() {
 function calculate() {
     directDamageCalc();
     reactionDamageCalc();
+    $('#level').innerHTML = level();
+    $('#resist').innerHTML = (1 - resistance()) * 100 + '%';
+    $('#def').innerHTML = (1 - defense()) * 100 + '%';
 }
 
 calculate();
