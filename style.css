@@ -1,0 +1,18 @@
+* {
+    margin: 0.1rem;
+}
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal {
+    display: flex;
+    flex-direction: row;
+}
+
+#calc {
+    width: 10em;
+    background-color: red;
+}
