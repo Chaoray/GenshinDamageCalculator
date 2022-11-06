@@ -130,7 +130,7 @@ function reactionDamageCalc() {
 
         case 'crystallize': {
             // 结晶等级系数*(1+(4.44*元素精通)/(元素精通+1400))
-            let shield = crystalShieldCoefficient[lvl - 1] * (1 + (4.44 * eleMtr / (eleMtr + 1400)));
+            let shield = crystalShieldCoefficient[lvl - 1] * (1 + (reactionValue * eleMtr / (eleMtr + 1400)));
             $('#cst').innerHTML = shield;
             break;
         }
