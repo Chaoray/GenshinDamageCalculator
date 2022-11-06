@@ -52,10 +52,12 @@
             <div class="vertical">
                 <div class="horizontal">
                     <span>等級</span>
-                    <input type="number" id="mtr-lvl" value="80"/>
+                    <input type="number" id="mtr-lvl" value="80" />
                 </div>
                 <div class="horizontal">
-                    <a href="https://wiki.biligame.com/ys/%E6%80%AA%E7%89%A9%E6%8A%97%E6%80%A7%E4%B8%80%E8%A7%88">抗性%</a><input type="number" id="mtr-rst" value="10"/>
+                    <a
+                        href="https://wiki.biligame.com/ys/%E6%80%AA%E7%89%A9%E6%8A%97%E6%80%A7%E4%B8%80%E8%A7%88">抗性%</a><input
+                        type="number" id="mtr-rst" value="10" />
                 </div>
             </div>
 
@@ -66,24 +68,29 @@
                     <select id="reaction">
                         <option value="1" class="physical">無(物傷)</option>
 
-                        <option value="2" class="amplifying">蒸發 2倍</option>
-                        <option value="2" class="amplifying">融化 2倍</option>
-                        <option value="1.5" class="amplifying">蒸發 1.5倍</option>
-                        <option value="1.5" class="amplifying">融化 1.5倍</option>
+                        <optgroup label="增幅">
+                            <option value="2" class="amplifying">蒸發 2倍</option>
+                            <option value="2" class="amplifying">融化 2倍</option>
+                            <option value="1.5" class="amplifying">蒸發 1.5倍</option>
+                            <option value="1.5" class="amplifying">融化 1.5倍</option>
+                        </optgroup>
 
-                        <option value="0.25" class="transformative">燃燒</option>
-                        <option value="0.5" class="transformative">超導</option>
-                        <option value="0.6" class="transformative">擴散</option>
-                        <option value="1.2" class="transformative">感電</option>
-                        <option value="1.5" class="transformative">碎冰</option>
-                        <option value="2" class="transformative">超載</option>
+                        <optgroup label="劇變">
+                            <option value="0.25" class="transformative">燃燒</option>
+                            <option value="0.5" class="transformative">超導</option>
+                            <option value="0.6" class="transformative">擴散</option>
+                            <option value="1.2" class="transformative">感電</option>
+                            <option value="1.5" class="transformative">碎冰</option>
+                            <option value="2" class="transformative">超載</option>
+                            <option value="2" class="bloom">原綻放</option>
+                            <option value="3" class="bloom">烈綻放</option>
+                            <option value="3" class="bloom">超綻放</option>
+                        </optgroup>
 
-                        <option value="2" class="bloom">原綻放</option>
-                        <option value="3" class="bloom">烈綻放</option>
-                        <option value="3" class="bloom">超綻放</option>
-
-                        <option value="1.25" class="quicken">蔓激化</option>
-                        <option value="1.15" class="quicken">超激化</option>
+                        <optgroup label="激化">
+                            <option value="1.25" class="quicken">蔓激化</option>
+                            <option value="1.15" class="quicken">超激化</option>
+                        </optgroup>
 
                         <option value="4.44" class="crystallize">結晶</option>
                     </select>
