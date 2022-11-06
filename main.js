@@ -41,7 +41,7 @@ function crit() {
 }
 
 function critExp() {
-    return v('#ply-crtDmg') / 100 * v('#ply-crtRat') / 100;
+    return 1 + v('#ply-crtDmg') / 100 * v('#ply-crtRat') / 100;
 }
 
 function damageMagnification() {
